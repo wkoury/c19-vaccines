@@ -103,8 +103,8 @@ export default function Home({ data, lastCommit }) {
         <div className={styles.footer}>
           <Container>
             <Row>
-              <Col>Data last updated <a href="https://github.com/govex/COVID-19/blob/master/data_tables/vaccine_data/raw_data/vaccine_data_us_state_timeline.csv">{lastCommit}</a>.</Col>
-              <Col><a href="https://github.com/wkoury/c19-vaccines">GitHub</a></Col>
+              <Col>Data last updated <a href="https://github.com/govex/COVID-19/blob/master/data_tables/vaccine_data/raw_data/vaccine_data_us_state_timeline.csv" rel="noopener noreferrer" target="_blank">{lastCommit}</a>.</Col>
+              <Col><a href="https://github.com/wkoury/c19-vaccines" rel="noopener noreferrer" target="_blamk">GitHub</a></Col>
             </Row>
           </Container>
         </div>
