@@ -1,5 +1,6 @@
 import Head from "next/head";
 import { useState } from "react";
+import { useRouter } from "next/router";
 import styles from "../styles/Home.module.css";
 import { Alert, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Row, Col } from "reactstrap";
 import {Line} from "react-chartjs-2";
@@ -13,7 +14,10 @@ export default function Home({ data, lastCommit }) {
   }
   const states = Array.from(stateSet);
 
-  const [state, setState] = useState("Select a State");
+  const router = useRouter();
+  console.log(router.query);
+
+  const [state, setState] = useState(router.query.name === undefined ? "Select a State" : formatString(router.query.name));
   const [dropdownOpen, setOpen] = useState(false);
   const toggle = () => setOpen(!dropdownOpen);
 
@@ -90,7 +94,10 @@ export default function Home({ data, lastCommit }) {
             {states.map(state => (
               <DropdownItem 
                 key={states.indexOf(state)}
-                onClick={() => setState(state)}
+                onClick={() => {
+                  setState(state);
+                  router.push({ query: { name: state } });
+                }}
               >
                 {state}
               </DropdownItem>
@@ -140,4 +147,12 @@ const cleanZeros = array => {
   }
 
   return array;
+}
+
+const formatString = str => {
+  str = str.toLowerCase();
+  str = str.split("");
+  str[0] = str[0].toUpperCase();
+  str = str.join("");
+  return str;
 }
