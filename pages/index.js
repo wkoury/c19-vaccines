@@ -3,35 +3,33 @@ import { useState } from "react";
 import { useRouter } from "next/router";
 import styles from "../styles/Home.module.css";
 import { Alert, ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem, Container, Row, Col } from "reactstrap";
-import {Line} from "react-chartjs-2";
-
+import { Line } from "react-chartjs-2";
 
 export default function Home({ data, lastCommit }) {
   //data init
   let stateSet = new Set();
   for(let i = 1; i < data.length; ++i){
-    stateSet.add(data[i][1]);
+    stateSet.add(data[i][2]);
   }
   const states = Array.from(stateSet);
 
   const router = useRouter();
-  console.log(router.query);
 
   const [state, setState] = useState(router.query.name === undefined ? "Select a State" : formatString(router.query.name));
   const [dropdownOpen, setOpen] = useState(false);
   const toggle = () => setOpen(!dropdownOpen);
 
-  let filteredData = data.filter(line => { return line[1] == state });
+  let filteredData = data.filter(line => { return line[2] == state });
   let filteredData2 = [];
   filteredData.forEach(line => {
-    filteredData2.push([line[0], line[4], line[12]]);
+    filteredData2.push([line[0], line[4], line[6]]);
   });
 
   const dataObject = {
     labels: getColumnByIndex(filteredData2, 0),
     datasets: [
       {
-        label: "Vaccines Provided",
+        label: "Vaccine Doses Administered",
         data: cleanZeros(getColumnByIndex(filteredData2, 1)),
         fill: false,
         backgroundColor: "rgb(255, 99, 132)",
@@ -39,7 +37,7 @@ export default function Home({ data, lastCommit }) {
         yAxisID: "y-axis-1",
       },
       {
-        label: "Vaccines Administered",
+        label: "People Fully Vaccinated",
         data: cleanZeros(getColumnByIndex(filteredData2, 2)),
         fill: false,
         backgroundColor: "rgb(54, 162, 235)",
@@ -75,7 +73,7 @@ export default function Home({ data, lastCommit }) {
       ]
     }
   }
-  
+
   return (
     <div className={styles.container}>
       <Head>
@@ -92,7 +90,7 @@ export default function Home({ data, lastCommit }) {
           </DropdownToggle>
           <DropdownMenu>
             {states.map(state => (
-              <DropdownItem 
+              <DropdownItem
                 key={states.indexOf(state)}
                 onClick={() => {
                   setState(state);
@@ -121,7 +119,7 @@ export default function Home({ data, lastCommit }) {
 }
 
 export async function getServerSideProps() {
-  const dataFunc = require("../utils/url");  
+  const dataFunc = require("../utils/url");
   const data = await dataFunc.getData();
   const commitsRes = await dataFunc.getCommits();
   const commits = JSON.parse(commitsRes);
